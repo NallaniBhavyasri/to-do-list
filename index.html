@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Work To-Do List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        h2 {
+            color: #2c3e50;
+            margin-top: 20px;
+        }
+        .section {
+            margin-bottom: 25px;
+        }
+        ul {
+            list-style-type: none;
+            padding-left: 0;
+        }
+        li {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+        input[type="checkbox"] {
+            margin-right: 12px;
+        }
+        .delete-btn {
+            margin-left: auto;
+            background-color: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        .add-task {
+            display: flex;
+            margin-top: 10px;
+        }
+        .add-task input {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .add-task button {
+            padding: 8px 16px;
+            background-color: #4caf50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+        .date {
+            text-align: right;
+            color: #666;
+            font-style: italic;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>My To-Do List</h1>
+        <div class="date" id="current-date"></div>
+        
+        <div class="section">
+            <h2>Priority Tasks</h2>
+            <ul id="priority-tasks">
+                <!-- Priority tasks will be added here -->
+            </ul>
+            <div class="add-task">
+                <input type="text" id="new-priority-task" placeholder="Add your priority task for tomorrow...">
+                <button onclick="addTask('priority-tasks', 'new-priority-task')">Add</button>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>DSA (Data Structures & Algorithms)</h2>
+            <ul id="dsa-tasks">
+                <li><input type="checkbox"> Practicing atleast 3-4 problems</li>
+            </ul>
+            <div class="add-task">
+                <input type="text" id="new-dsa-task" placeholder="Add new DSA task...">
+                <button onclick="addTask('dsa-tasks', 'new-dsa-task')">Add</button>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Web Development</h2>
+            <ul id="web-tasks">
+                <li><input type="checkbox"> learning something new</li>
+                <li><input type="checkbox"> practicing by creating a project </li>
+                <li><input type="checkbox"> working on existing project</li>
+            </ul>
+            <div class="add-task">
+                <input type="text" id="new-web-task" placeholder="Add new web development task...">
+                <button onclick="addTask('web-tasks', 'new-web-task')">Add</button>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>Morning Routine</h2>
+            <ul id="morning-tasks">
+                <li><input type="checkbox"> Wake up(5)</li>
+                <li><input type="checkbox"> Make bed(5:5)</li>
+                <li><input type="checkbox"> Yoga(upto 6)</li>
+                <li><input type="checkbox"> Bath(6:15)</li>
+                <li><input type="checkbox"> work for 1 hour</li>
+                <li><input type="checkbox"> Breakfast</li>
+                <li><input type="checkbox"> work 2 hours(8:30-10:30)</li>
+                <li><input type="checkbox"> break</li>
+                <li><input type="checkbox"> work 2 hours(10:45-12:45)</li>
+            </ul>
+            <h2>Afternoon Routine</h2>
+            <ul id="morning-tasks">
+                <li><input type="checkbox"> Work for 2 hours(1:30:3:30)</li>
+                <li><input type="checkbox"> listen to podcasts upto 5 </li>
+                <li><input type="checkbox"> work for 2 hours(upto 7)</li>
+                <li><input type="checkbox"> dinner(8)</li>
+                <li><input type="checkbox"> talking with parents chilling</li>
+                <li><input type="checkbox"> selfcare</li>
+                <li><input type="checkbox"> prepare for the next day</li>
+                <li><input type="checkbox"> gratitude prayer</li>
+            </ul>
+            <div class="add-task">
+                <input type="text" id="new-morning-task" placeholder="Add new morning routine task...">
+                <button onclick="addTask('morning-tasks', 'new-morning-task')">Add</button>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2>End of Day</h2>
+            <ul id="eod-tasks">
+                <li><input type="checkbox"> Review completed tasks</li>
+                <li><input type="checkbox"> Plan tomorrow's priority task</li>
+                <li><input type="checkbox"> Set goals for DSA and Web Development</li>
+            </ul>
+            <div class="add-task">
+                <input type="text" id="new-eod-task" placeholder="Add new end-of-day task...">
+                <button onclick="addTask('eod-tasks', 'new-eod-task')">Add</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Set the current date
+        function updateDate() {
+            const date = new Date();
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('current-date').textContent = date.toLocaleDateString('en-US', options);
+        }
+        
+        // Add a new task to the specified list
+        function addTask(listId, inputId) {
+            const input = document.getElementById(inputId);
+            const taskText = input.value.trim();
+            
+            if (taskText) {
+                const ul = document.getElementById(listId);
+                const li = document.createElement('li');
+                
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                
+                const span = document.createElement('span');
+                span.textContent = taskText;
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'Delete';
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.onclick = function() {
+                    li.remove();
+                    saveData();
+                };
+                
+                li.appendChild(checkbox);
+                li.appendChild(span);
+                li.appendChild(deleteBtn);
+                
+                ul.appendChild(li);
+                input.value = '';
+                
+                saveData();
+            }
+        }
+        
+        // Save tasks to local storage
+        function saveData() {
+            const lists = {
+                'priority-tasks': [],
+                'dsa-tasks': [],
+                'web-tasks': [],
+                'morning-tasks': [],
+                'eod-tasks': []
+            };
+            
+            for (const listId in lists) {
+                const listItems = document.querySelectorAll(`#${listId} li`);
+                listItems.forEach(item => {
+                    const text = item.querySelector('span')?.textContent || item.textContent.replace('Delete', '').trim();
+                    const checked = item.querySelector('input[type="checkbox"]').checked;
+                    lists[listId].push({ text, checked });
+                });
+            }
+            
+            localStorage.setItem('todoData', JSON.stringify(lists));
+        }
+        
+        // Load tasks from local storage
+        function loadData() {
+            const data = localStorage.getItem('todoData');
+            if (data) {
+                const lists = JSON.parse(data);
+                
+                for (const listId in lists) {
+                    const ul = document.getElementById(listId);
+                    
+                    // Clear default items
+                    ul.innerHTML = '';
+                    
+                    lists[listId].forEach(task => {
+                        const li = document.createElement('li');
+                        
+                        const checkbox = document.createElement('input');
+                        checkbox.type = 'checkbox';
+                        checkbox.checked = task.checked;
+                        checkbox.addEventListener('change', saveData);
+                        
+                        const span = document.createElement('span');
+                        span.textContent = task.text;
+                        
+                        const deleteBtn = document.createElement('button');
+                        deleteBtn.textContent = 'Delete';
+                        deleteBtn.className = 'delete-btn';
+                        deleteBtn.onclick = function() {
+                            li.remove();
+                            saveData();
+                        };
+                        
+                        li.appendChild(checkbox);
+                        li.appendChild(span);
+                        li.appendChild(deleteBtn);
+                        
+                        ul.appendChild(li);
+                    });
+                }
+            }
+        }
+        
+        // Add event listeners to checkboxes
+        document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', saveData);
+        });
+        
+        // Initialize the page
+        updateDate();
+        loadData();
+        
+        // Add event listeners for Enter key on input fields
+        document.querySelectorAll('.add-task input').forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    const buttonId = this.id;
+                    const listId = buttonId.replace('new-', '').replace('-task', '-tasks');
+                    addTask(listId, buttonId);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
